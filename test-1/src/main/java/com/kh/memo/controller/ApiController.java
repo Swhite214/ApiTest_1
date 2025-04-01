@@ -27,22 +27,40 @@ public class ApiController {
 	    return apiService.getAllData();
 	}
 	@GetMapping("/{id}")
-	public ResponseEntity<ApiDto> getDataById(@PathVariable Long id) {
+	public ResponseEntity <ApiDto> getDataById(@PathVariable Long id) {
 	    return apiService.getDataById(id)
 	            .map(ResponseEntity::ok)
 	            .orElse(ResponseEntity.notFound().build());
 	}
-	@PutMapping("/{id}")
+	@PutMapping("/update/{id}")
 	public ResponseEntity<ApiDto> updateData(@PathVariable Long id, @RequestBody String newData) {
 	    return apiService.updateData(id, newData)
 	            .map(ResponseEntity::ok)
 	            .orElse(ResponseEntity.notFound().build());
 	}
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<Void> deleteData(@PathVariable Long id) {
 	    if (apiService.deleteData(id)) {
 	        return ResponseEntity.noContent().build();
 	    }
 	    return ResponseEntity.notFound().build();
+	}
+	@GetMapping("/search")
+	public ResponseEntity<List<ApiDto>> searchMovies(@RequestParam(required = false, defaultValue = "") String keyword){
+		List<ApiDto> results = apiService.searchByKeyword(keyword);
+
+		if(results.isEmpty()){
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(results);
+	}
+	@GetMapping("/boxoffice")
+	public ResponseEntity<List<ApiDto>> getBoxOfficeByDate(@RequestParam String date){
+		List<ApiDto> results = apiService.getBoxOfficeByDate(date);
+
+		if (results.isEmpty()){
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(results);
 	}
 }

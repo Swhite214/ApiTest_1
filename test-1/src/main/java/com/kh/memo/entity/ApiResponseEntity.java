@@ -15,4 +15,6 @@ public class ApiResponseEntity {
 	private Long id;
 	
 	private String data;
+	private String showDate;
+
 }
